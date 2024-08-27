@@ -8,6 +8,8 @@ import com.jsp.ets.config.GenerateSequenceId;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
@@ -38,7 +40,8 @@ public class User {
 	private String password;
 
 	@Column(name = "role")
-	private String role;
+	@Enumerated(EnumType.STRING)
+	private UserRole role;
 
 	@Column(name = "created_date")
 	private LocalDateTime created_date;
