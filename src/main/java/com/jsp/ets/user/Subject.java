@@ -10,5 +10,7 @@ public enum Subject {
 	SPRING_BOOT,
 	HTML,
 	CSS,
-	JAVASCRIPT
+	JAVASCRIPT,
+	PYTHON,
+	SALENIUM
 }
