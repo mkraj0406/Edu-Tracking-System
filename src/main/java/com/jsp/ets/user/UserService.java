@@ -178,10 +178,20 @@ public class UserService {
 
 	public BatchResponseDTO updateBatchStatus(BatchStatus batchStatus, String batchId) {
 		return batchRepository.findById(batchId).map(batch -> {
-			 batch.setBatchStatus(batchStatus);
-			 batchRepository.save(batch);
-		return	batchMapper.mapBatchToResponse(batch);
+			batch.setBatchStatus(batchStatus);
+			batchRepository.save(batch);
+			return batchMapper.mapBatchToResponse(batch);
 		}).orElseThrow(() -> new ObjectNotFoundByIdException("batch not found by id!!"));
 	}
 
+
+	public List<RatingResponseDTO> getStudentRating(String studentId) {
+		 return userRepository.findById(studentId).map(user -> {
+			Student student = (Student) user;
+			 return student.getRatings().stream()
+			.map(rating -> ratingMapper.mapRatingToResponse(rating))
+			.toList();
+		}).orElseThrow(() -> new ObjectNotFoundByIdException("batch not found by id!!"));
+		
+	}
 }

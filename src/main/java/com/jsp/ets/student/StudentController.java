@@ -1,8 +1,11 @@
 package com.jsp.ets.student;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,8 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jsp.ets.rating.RatingResponseDTO;
 import com.jsp.ets.security.RegistrationRequestDTO;
-import com.jsp.ets.stack.Stack;
+import com.jsp.ets.stack.Stack;import com.jsp.ets.user.Student;
 import com.jsp.ets.user.UserResponseDto;
 import com.jsp.ets.user.UserService;
 import com.jsp.ets.utility.AppResponseBuilder;
@@ -45,17 +49,23 @@ private AppResponseBuilder responseBuilder;
 		return responseBuilder.success(HttpStatus.CREATED, "Trainer Created successfully", userResponseDto);
 	}
 	
-	@PutMapping("/students/{userId}")
+	@PutMapping("/students/{user-id}")
 	public ResponseEntity<ResponseStructure<StudentResponseDTO>> updateStudent(@RequestBody StudentRequestDTO studentRequestDTO,@PathVariable String userId){
 		StudentResponseDTO studentResponseDTO= studentService.updateStudent(studentRequestDTO,userId);
 		
 		return responseBuilder.success(HttpStatus.OK , "Student updated succesfully", studentResponseDTO);
 	}
 	
-	@PatchMapping("/students/{studentId}")
+	@PatchMapping("/students/{student-Id}")
 	public ResponseEntity<ResponseStructure<StudentResponseDTO>> updateStudentStack(@RequestParam Stack stack,@PathVariable String studentId){
 		 StudentResponseDTO studentResponseDTO = studentService.updatedStudentStack(stack,studentId);
 		 
 		 return responseBuilder.success(HttpStatus.OK, "stack successfully updated", studentResponseDTO);
+	}
+	
+	@GetMapping("/students/ratings/{student-id}")
+	public ResponseEntity<ResponseStructure<List<RatingResponseDTO>>>  getStudentRating(String studentId){
+		 List<RatingResponseDTO> ratingResponseDTOs = studentService.getStudentRating(studentId);
+		 return responseBuilder.success(HttpStatus.FOUND, "student objewct found succesfully",ratingResponseDTOs );
 	}
 }

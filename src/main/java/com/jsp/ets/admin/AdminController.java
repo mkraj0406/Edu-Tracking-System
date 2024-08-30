@@ -36,9 +36,15 @@ public class AdminController {
 		
 	}
 	
-	@PatchMapping("/admins/batchs/{batch-id}")
-	public ResponseEntity<ResponseStructure<BatchResponseDTO>> updateBatchStatus(@RequestParam BatchStatus batchStatus,@PathVariable String batchId){
-		 BatchResponseDTO batchResponseDTO= adminService.updateBatchStatus(batchStatus, batchId);
+	@PatchMapping("/admins/batchs/closed/{batch-id}")
+	public ResponseEntity<ResponseStructure<BatchResponseDTO>> updateBatchStatus(@PathVariable String batchId){
+		 BatchResponseDTO batchResponseDTO= adminService.updateBatchStatus(BatchStatus.CANCELLED, batchId);
+		 return responseBuilder.success(HttpStatus.OK, "batchstatus updated successfully", batchResponseDTO);
+	}
+	
+	@PatchMapping("/admins/batchs/cancel/{batch-id}")
+	public ResponseEntity<ResponseStructure<BatchResponseDTO>> updateBatchStatusToClosed(@RequestParam BatchStatus batchStatus,@PathVariable String batchId){
+		 BatchResponseDTO batchResponseDTO= adminService.updateBatchStatus(BatchStatus.CLOSED, batchId);
 		 return responseBuilder.success(HttpStatus.OK, "batchstatus updated successfully", batchResponseDTO);
 	}
 	
