@@ -26,6 +26,7 @@ public class BatchRequestDTO {
 
 	private LocalTime endsAt;
 
-
+	private LocalDateTime startingDate;
+	
 	private List<Subject> subjects;
 }

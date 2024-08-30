@@ -11,37 +11,24 @@ import com.jsp.ets.trainer.TrainerResponseDTO;
 @Component
 public class UserMapper {
 
-	
 	public User mapUserToEntity(RegistrationRequestDTO registrationRequestDTO, User user) {
 		user.setUsername(registrationRequestDTO.getUsername());
 		user.setEmail(registrationRequestDTO.getEmail());
-		if (user instanceof Admin) {
-			user.setRole(UserRole.ADMIN);
-		} else if (user instanceof HR) {
-			user.setRole(UserRole.HR);
-		} else if (user instanceof Trainer) {
-			user.setRole(UserRole.TRAINER);
-		} else if (user instanceof Student) {
-			user.setRole(UserRole.STUDENT);
-		}
-
 		return user;
 	}
-	
 
 	public UserResponseDto mapUserToResponce(User user) {
 		UserResponseDto userResponseDto = new UserResponseDto();
 		userResponseDto.setUserId(user.getUserId());
 		userResponseDto.setUsername(user.getUsername());
+		userResponseDto.setRole(user.getRole());
 		userResponseDto.setEmail(user.getEmail());
 		userResponseDto.setCreated_date(user.getCreated_date());
 		userResponseDto.setModified_date(user.getModified_date());
 
 		return userResponseDto;
 	}
-	
-	
-	//-------------------------------------------------------------------------------------------
+
 	public Trainer mapTrainerToEntity(TrainerRequestDTO trainerRequestDTO, Trainer trainer) {
 		trainer.setUsername(trainerRequestDTO.getUsername());
 		trainer.setEmail(trainerRequestDTO.getEmail());
@@ -49,10 +36,10 @@ public class UserMapper {
 
 		return trainer;
 	}
-	
+
 	public TrainerResponseDTO mapTainerToResponce(Trainer trainer) {
 		TrainerResponseDTO trainerResponseDTO = new TrainerResponseDTO();
-
+		trainerResponseDTO.setUserId(trainer.getUserId());
 		trainerResponseDTO.setUsername(trainer.getUsername());
 		trainerResponseDTO.setEmail(trainer.getEmail());
 		trainerResponseDTO.setCreated_date(trainer.getCreated_date());
@@ -61,9 +48,8 @@ public class UserMapper {
 
 		return trainerResponseDTO;
 	}
-	
-	//-------------------------------------------------------------------------------------------
-	
+
+
 	public Student mapStudentToEntity(StudentRequestDTO studentRequestDTO, Student student) {
 		student.setUsername(studentRequestDTO.getUsername());
 		student.setEmail(studentRequestDTO.getEmail());
@@ -76,7 +62,6 @@ public class UserMapper {
 
 		return student;
 	}
-	
 
 	public StudentResponseDTO mapStudentToResponse(Student student) {
 		StudentResponseDTO studentResponseDTO = new StudentResponseDTO();
@@ -89,10 +74,9 @@ public class UserMapper {
 		studentResponseDTO.setTwelthPercentage(student.getTwelthPercentage());
 		studentResponseDTO.setTenthPercentage(student.getTenthPercentage());
 		studentResponseDTO.setStack(student.getStack());
-		
+
 		return studentResponseDTO;
 
 	}
-	
-	//-------------------------------------------------------------------------------------------
+
 }

@@ -10,6 +10,7 @@ public class BatchMapper {
 		batch.setTitle(batchRequestDTO.getTitle());
 		batch.setBeginsAt(batchRequestDTO.getBeginsAt());
 		batch.setEndsAt(batchRequestDTO.getEndsAt());
+		batch.setStartingDate(batchRequestDTO.getStartingDate());
 		batch.setSubjects(batchRequestDTO.getSubjects());
 		
 		return batch;

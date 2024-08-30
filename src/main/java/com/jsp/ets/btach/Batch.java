@@ -48,7 +48,6 @@ public class Batch {
 	private LocalTime endsAt;
 	
 	@Column(name = "starting_date")
-	@CreatedDate
 	private LocalDateTime startingDate;
 	
 	@Enumerated(EnumType.STRING)

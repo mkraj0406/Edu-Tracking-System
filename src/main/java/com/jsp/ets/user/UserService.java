@@ -52,73 +52,38 @@ public class UserService {
 
 	private BatchMapper batchMapper;
 
-	public UserResponseDto registerAdmin(RegistrationRequestDTO registrationRequestDTO) {
-		User user = userMapper.mapUserToEntity(registrationRequestDTO, new Admin());
-		user = userRepository.save(user);
-		UserResponseDto userResponseDto = userMapper.mapUserToResponce(user);
+	public UserResponseDto registerUser(RegistrationRequestDTO registrationRequestDto, UserRole role) {
+		User user = null;
+		switch (role) {
+		case ADMIN -> user = new Admin();
+		case HR -> user = new HR();
+		case STUDENT -> user = new Student();
+		case TRAINER -> user = new Trainer();
+		default -> throw new IllegalArgumentException("Unexpected value: " + role);
+		}
 
-		return userResponseDto;
+		if (user != null) {
+			user = userMapper.mapUserToEntity(registrationRequestDto, user);
+			user.setRole(role);
+			user = userRepository.save(user);
+		}
+
+		return userMapper.mapUserToResponce(user);
 	}
 
-	public UserResponseDto registerHR(RegistrationRequestDTO registrationRequestDTO) {
-		User user = userMapper.mapUserToEntity(registrationRequestDTO, new HR());
-		user = userRepository.save(user);
-		UserResponseDto userResponseDto = userMapper.mapUserToResponce(user);
-		return userResponseDto;
-	}
-
-	public UserResponseDto registerTrainer(RegistrationRequestDTO registrationRequestDTO) {
-		User user = userMapper.mapUserToEntity(registrationRequestDTO, new Trainer());
-		user = userRepository.save(user);
-		UserResponseDto userResponseDto = userMapper.mapUserToResponce(user);
-		return userResponseDto;
-	}
-
-	public UserResponseDto registerStudent(RegistrationRequestDTO registrationRequestDTO) {
-		User user = userMapper.mapUserToEntity(registrationRequestDTO, new Student());
-		user = userRepository.save(user);
-		UserResponseDto userResponseDto = userMapper.mapUserToResponce(user);
-		return userResponseDto;
-	}
-
-	// ------------------------------------------------------------------------------------------
-
-	public TrainerResponseDTO updateTrainer(TrainerRequestDTO trainerRequestDTO, String userId) {
-//		Optional<User> optional = userRepository.findById(userId);
-//		if (optional.isPresent()) {
-//			User user = optional.get();
-//			Trainer trainer = (Trainer) user;
-//			trainer = userMapper.mapTrainerToEntity(trainerRequestDTO, trainer);
-//			trainer = userRepository.save(trainer);
-//			TrainerResponseDTO trainerResponseDTO = userMapper.mapTainerToResponce(trainer);
-//			return trainerResponseDTO;
-//		} else {
-//			return null;
-//		}
-
+	
+	public TrainerResponseDTO updateTrainerForSubject(TrainerRequestDTO trainerRequestDTO, String userId) {
 		return userRepository.findById(userId).map(user -> {
-			userMapper.mapTrainerToEntity(trainerRequestDTO, (Trainer) user);
-			userRepository.save((Trainer) user);
-			return userMapper.mapTainerToResponce((Trainer) user);
+			Trainer trainer = (Trainer) user;
+			trainer = userMapper.mapTrainerToEntity(trainerRequestDTO, trainer);
+			trainer = userRepository.save(trainer);
+			return userMapper.mapTainerToResponce(trainer);
 
 		}).orElseThrow(() -> new ObjectNotFoundByIdException("Trainer not found by id!!"));
 
 	}
 
-	// ----------------------------------------------------------------------------------------------
 	public StudentResponseDTO updateStudent(StudentRequestDTO studentRequestDTO, String userId) {
-//		Optional<User> optional = userRepository.findById(userId);
-//		if (optional.isPresent()) {
-//			User user = optional.get();
-//			Student student = (Student) user;
-//			student = userMapper.mapStudentToEntity(studentRequestDTO,student);
-//			userRepository.save(student);
-//			StudentResponseDTO studentResponseDTO = userMapper.mapStudentToResponse(student);
-//			return studentResponseDTO;
-//		}else {
-//			return null;
-//		}
-
 		return userRepository.findById(userId).map(user -> {
 			userMapper.mapStudentToEntity(studentRequestDTO, (Student) user);
 			userRepository.save((Student) user);
@@ -127,23 +92,6 @@ public class UserService {
 	}
 
 	public StudentResponseDTO updatedStudentStack(Stack stack, String studentId) {
-//		Optional<User> optional = userRepository.findById(studentId);
-//		if (optional.isPresent()) {
-//			User user = optional.get();
-//			Student student = (Student) user;
-//			List<Subject> subjects= stack.getSubjects();
-//			for (Subject subject : subjects) {
-//				Rating rating = new Rating();
-//				rating.setSubject(subject);
-//			}
-//			student.setStack(stack);
-//			student = userRepository.save(student);
-//			StudentResponseDTO studentResponseDTO = userMapper.mapStudentToResponse(student);
-//			return studentResponseDTO;
-//		}else {
-//			return null;
-//		}
-
 		return userRepository.findById(studentId).map(user -> {
 			Student student = (Student) user;
 			stack.getSubjects().forEach(subject -> {
@@ -157,7 +105,6 @@ public class UserService {
 		}).orElseThrow(() -> new ObjectNotFoundByIdException("student not found by id!!"));
 	}
 
-	// --------------------------------------------------------------------------------------------------------
 	public RatingResponseDTO updateStudentRating(RatingRequestDTO ratingRequestDTO, String ratingId) {
 		return ratingRepository.findById(ratingId).map(rating -> {
 			rating = ratingMapper.mapRatingToEntity(ratingRequestDTO, rating);
@@ -184,14 +131,11 @@ public class UserService {
 		}).orElseThrow(() -> new ObjectNotFoundByIdException("batch not found by id!!"));
 	}
 
-
 	public List<RatingResponseDTO> getStudentRating(String studentId) {
-		 return userRepository.findById(studentId).map(user -> {
+		return userRepository.findById(studentId).map(user -> {
 			Student student = (Student) user;
-			 return student.getRatings().stream()
-			.map(rating -> ratingMapper.mapRatingToResponse(rating))
-			.toList();
+			return student.getRatings().stream().map(rating -> ratingMapper.mapRatingToResponse(rating)).toList();
 		}).orElseThrow(() -> new ObjectNotFoundByIdException("batch not found by id!!"));
-		
+
 	}
 }
