@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jsp.ets.rating.RatingRequestDTO;
+import com.jsp.ets.rating.RatingResponseDTO;
 import com.jsp.ets.security.RegistrationRequestDTO;
+import com.jsp.ets.student.StudentResponseDTO;
 import com.jsp.ets.user.Subject;
 import com.jsp.ets.user.UserResponseDto;
 import com.jsp.ets.user.UserService;
@@ -38,7 +41,7 @@ public class TrainerController {
 
 	@PostMapping("/trainers")
 	public ResponseEntity<ResponseStructure<UserResponseDto>> registerTainer(
-			@org.springframework.web.bind.annotation.RequestBody  RegistrationRequestDTO registrationRequestDTO) {
+			@org.springframework.web.bind.annotation.RequestBody @Valid  RegistrationRequestDTO registrationRequestDTO) {
 		UserResponseDto userResponseDto = trainerService.registerTrainer(registrationRequestDTO);
 		return responseBuilder.success(HttpStatus.CREATED, "Trainer Created successfully", userResponseDto);
 	}
@@ -50,4 +53,9 @@ public class TrainerController {
 		 return responseBuilder.success(HttpStatus.OK, "Trainer Updated Successfully", trainerResponseDTO);
 	}
 
+	@PutMapping("/trainers/ratings/{rating-id}")
+	public ResponseEntity<ResponseStructure<RatingResponseDTO>> updateStudentRating(@RequestBody @Valid RatingRequestDTO ratingRequestDTO,@PathVariable String ratingId){
+		 RatingResponseDTO ratingResponseDTO= trainerService.updateStudentRating(ratingRequestDTO,ratingId);
+		 return responseBuilder.success(HttpStatus.OK, "Students is successfully updated with rating", ratingResponseDTO);
+	}
 }

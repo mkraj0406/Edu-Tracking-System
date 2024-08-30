@@ -19,6 +19,7 @@ import com.jsp.ets.utility.AppResponseBuilder;
 import com.jsp.ets.utility.ResponseStructure;
 
 import jakarta.validation.Valid;
+import lombok.val;
 
 @RestController
 public class StudentController {
@@ -38,8 +39,8 @@ private AppResponseBuilder responseBuilder;
 
 
 	@PostMapping("/students")
-	public ResponseEntity<ResponseStructure<UserResponseDto>> registerHR(
-			@org.springframework.web.bind.annotation.RequestBody  RegistrationRequestDTO registrationRequestDTO) {
+	public ResponseEntity<ResponseStructure<UserResponseDto>> registerStudent(
+			@org.springframework.web.bind.annotation.RequestBody  @Valid RegistrationRequestDTO registrationRequestDTO) {
 		UserResponseDto userResponseDto = studentService.registerStudent(registrationRequestDTO);
 		return responseBuilder.success(HttpStatus.CREATED, "Trainer Created successfully", userResponseDto);
 	}

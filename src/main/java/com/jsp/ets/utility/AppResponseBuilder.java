@@ -22,4 +22,8 @@ public class AppResponseBuilder {
 		.body(ResponseStructure.create(badRequest, message, errors));
 	}
 	
+	
+	public <T> ResponseEntity<ErrorStructure<T>> error(HttpStatus status,String message, String rootCouse){
+		return ResponseEntity.status(status).body(ErrorStructure.create(status, message, rootCouse));
+	}
 }

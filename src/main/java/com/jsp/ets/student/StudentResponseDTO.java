@@ -1,8 +1,11 @@
 package com.jsp.ets.student;
 
 import java.time.Year;
+import java.util.List;
 
+import com.jsp.ets.rating.Rating;
 import com.jsp.ets.stack.Stack;
+import com.jsp.ets.user.Subject;
 import com.jsp.ets.user.UserResponseDto;
 
 import lombok.Getter;
@@ -25,5 +28,9 @@ public class StudentResponseDTO extends UserResponseDto {
 	private int tenthPercentage;
 	
 	private Stack stack;
+	
+	private List<Rating> ratings;
+	
+	private List<Subject> subjects;
 
 }

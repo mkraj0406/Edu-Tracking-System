@@ -3,6 +3,7 @@ package com.jsp.ets.user;
 import java.time.Year;
 import java.util.List;
 
+import com.jsp.ets.btach.Batch;
 import com.jsp.ets.rating.Rating;
 import com.jsp.ets.stack.Stack;
 
@@ -11,6 +12,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -45,6 +47,9 @@ public class Student extends User {
 	private Stack stack;
 	
 	@OneToMany
-	List<Rating> ratings;
+	private List<Rating> ratings;
+	
+	@ManyToMany
+	private List<Batch>  batchs;
 
 }
