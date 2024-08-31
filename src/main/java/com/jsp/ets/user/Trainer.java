@@ -14,8 +14,6 @@ import lombok.Setter;
 @Setter
 public class Trainer extends User {
 
-	
-  private List<Subject> subjects;
-  
-  
+	private List<Subject> subjects;
+
 }

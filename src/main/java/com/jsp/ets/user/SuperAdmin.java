@@ -6,6 +6,5 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "SuperAdmin")
 public class SuperAdmin extends User {
-	
-	
+
 }
