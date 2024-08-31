@@ -29,7 +29,6 @@ public class FieldErrorExceptionHandler extends ResponseEntityExceptionHandler {
 		this.responseBuilder = responceBuilder;
 	}
 
-	
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
@@ -44,5 +43,5 @@ public class FieldErrorExceptionHandler extends ResponseEntityExceptionHandler {
 		}
 		return responseBuilder.fieldErrors(HttpStatus.BAD_REQUEST, "Bad Request,Invalid Inputs", errors);
 	}
-	
+
 }

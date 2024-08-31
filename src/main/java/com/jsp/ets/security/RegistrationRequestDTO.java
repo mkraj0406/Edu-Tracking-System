@@ -9,8 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RegistrationRequestDTO {
-	
-	
+
 	@NotNull(message = "username can't be null")
 	@Pattern(regexp = "^[a-zA-Z][a-zA-Z0-9_-]{2,19}$")
 	private String username;
@@ -19,5 +18,4 @@ public class RegistrationRequestDTO {
 	@Email(regexp = "^[a-zA-Z0-9._%+-]+@gmail.com$", message = "Invalid Email, The email should ends with @gamil.com")
 	private String email;
 
-	
 }

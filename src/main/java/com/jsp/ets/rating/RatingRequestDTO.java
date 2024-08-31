@@ -28,7 +28,5 @@ public class RatingRequestDTO {
 	public void setFeedback(String feedback) {
 		this.feedback = feedback;
 	}
-	
-	
-	
+
 }

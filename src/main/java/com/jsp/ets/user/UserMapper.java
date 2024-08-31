@@ -42,6 +42,7 @@ public class UserMapper {
 		trainerResponseDTO.setUserId(trainer.getUserId());
 		trainerResponseDTO.setUsername(trainer.getUsername());
 		trainerResponseDTO.setEmail(trainer.getEmail());
+		trainerResponseDTO.setRole(trainer.getRole());
 		trainerResponseDTO.setCreated_date(trainer.getCreated_date());
 		trainerResponseDTO.setModified_date(trainer.getModified_date());
 		trainerResponseDTO.setSubjects(trainer.getSubjects());

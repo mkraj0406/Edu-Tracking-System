@@ -19,26 +19,23 @@ import lombok.Setter;
 @Entity
 @Table(name = "ratings")
 public class Rating {
-	
+
 	@Column(name = "ratingId")
 	@GenerateSequenceId
 	@Id
 	private String ratingId;
-	
+
 	@Column(name = "subject")
 	@Enumerated(EnumType.STRING)
 	private Subject subject;
-	
-	
+
 	@Column(name = "rating")
 	private int rating;
-	
+
 	@Column(name = "feedback")
 	private String feedback;
-	
+
 	@ManyToOne
 	private Student student;
-	
-	
-	
+
 }

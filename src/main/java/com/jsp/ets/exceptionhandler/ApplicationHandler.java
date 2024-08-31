@@ -12,18 +12,17 @@ import com.jsp.ets.utility.ErrorStructure;
 
 @RestControllerAdvice
 public class ApplicationHandler {
-	
-private AppResponseBuilder errorResponseBuilder;
-	
+
+	private AppResponseBuilder errorResponseBuilder;
 
 	public ApplicationHandler(AppResponseBuilder errorResponseBuilder) {
-	super();
-	this.errorResponseBuilder = errorResponseBuilder;
-}
+		super();
+		this.errorResponseBuilder = errorResponseBuilder;
+	}
 
 	@ExceptionHandler(ObjectNotFoundByIdException.class)
 	public ResponseEntity<ErrorStructure<String>> handlerUserNotFoundById(ObjectNotFoundByIdException ex) {
 		return errorResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(), "user not found by given id!!");
 	}
-	
+
 }

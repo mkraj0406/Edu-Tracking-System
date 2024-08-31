@@ -1,6 +1,5 @@
 package com.jsp.ets.user;
 
-
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,8 +29,6 @@ import lombok.Setter;
 @Table(name = "users")
 public class User {
 
-	
-	
 	@Column(name = "userId")
 	@jakarta.persistence.Id
 	@GenerateSequenceId
@@ -49,7 +46,7 @@ public class User {
 	@Column(name = "role")
 	@Enumerated(EnumType.STRING)
 	private UserRole role;
-	
+
 	@CreatedDate
 	@Column(name = "created_date")
 	private LocalDateTime created_date;

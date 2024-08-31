@@ -35,21 +35,21 @@ public class Student extends User {
 
 	@Column(name = "degree_percentage")
 	private int degreePercentage;
-	
+
 	@Column(name = "twelth_percentage")
 	private int twelthPercentage;
-	
+
 	@Column(name = "tenth_percentage")
 	private int tenthPercentage;
-	
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "tech_stack")
 	private Stack stack;
-	
+
 	@OneToMany
 	private List<Rating> ratings;
-	
+
 	@ManyToMany
-	private List<Batch>  batchs;
+	private List<Batch> batchs;
 
 }

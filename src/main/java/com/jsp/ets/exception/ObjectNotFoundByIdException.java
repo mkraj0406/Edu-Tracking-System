@@ -6,9 +6,9 @@ import lombok.AllArgsConstructor;
 public class ObjectNotFoundByIdException extends RuntimeException {
 
 	private String message;
-	
+
 	public String getmessage() {
 		return message;
 	}
-	
+
 }

@@ -26,11 +26,11 @@ public class StudentResponseDTO extends UserResponseDto {
 	private int twelthPercentage;
 
 	private int tenthPercentage;
-	
+
 	private Stack stack;
-	
+
 	private List<Rating> ratings;
-	
+
 	private List<Subject> subjects;
 
 }

@@ -2,6 +2,7 @@ package com.jsp.ets.user;
 
 import java.util.List;
 
+import org.springframework.context.support.BeanDefinitionDsl.Role;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -40,7 +41,7 @@ public class UserController {
 
 	private AppResponseBuilder responseBuilder;
 
-	@PostMapping("/users/admins")
+	@PostMapping("/admins/register")
 	public ResponseEntity<ResponseStructure<UserResponseDto>> registerAdmin(
 			@org.springframework.web.bind.annotation.RequestBody @Valid RegistrationRequestDTO registrationRequestDTO,
 			@RequestParam UserRole role) {
@@ -48,50 +49,28 @@ public class UserController {
 		return responseBuilder.success(HttpStatus.CREATED, "Admin successfully registered", userResponseDto);
 	}
 
-	@PutMapping("/users/admins/batchs/{batch-id}")
-	public ResponseEntity<ResponseStructure<BatchResponseDTO>> updateBatch(
-			@RequestBody @Valid BatchRequestDTO batchRequestDTO, String batchId) {
-		BatchResponseDTO batchResponseDTO = userService.updateBatch(batchRequestDTO, batchId);
-		return responseBuilder.success(HttpStatus.OK, "Batch updated successfully", batchResponseDTO);
-
-	}
-
-	@PatchMapping("/users/admins/batchs/closed/{batch-id}")
-	public ResponseEntity<ResponseStructure<BatchResponseDTO>> updateBatchStatus(@PathVariable String batchId) {
-		BatchResponseDTO batchResponseDTO = userService.updateBatchStatus(BatchStatus.CANCELLED, batchId);
-		return responseBuilder.success(HttpStatus.OK, "batchstatus updated successfully", batchResponseDTO);
-	}
-
-	@PatchMapping("/users/admins/batchs/cancel/{batch-id}")
-	public ResponseEntity<ResponseStructure<BatchResponseDTO>> updateBatchStatusToClosed(
-			@RequestParam BatchStatus batchStatus, @PathVariable String batchId) {
-		BatchResponseDTO batchResponseDTO = userService.updateBatchStatus(BatchStatus.CLOSED, batchId);
-		return responseBuilder.success(HttpStatus.OK, "batchstatus updated successfully", batchResponseDTO);
-	}
-
-	@PostMapping("/users/hr")
+	@PostMapping("/hr/register")
 	public ResponseEntity<ResponseStructure<UserResponseDto>> registerHR(
-			@org.springframework.web.bind.annotation.RequestBody @Valid RegistrationRequestDTO registrationRequestDTO,
-			@RequestParam UserRole role) {
-		UserResponseDto userResponseDto = userService.registerUser(registrationRequestDTO, role);
+			@org.springframework.web.bind.annotation.RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
+		UserResponseDto userResponseDto = userService.registerUser(registrationRequestDTO, UserRole.HR);
 		return responseBuilder.success(HttpStatus.CREATED, "HR Created successfully", userResponseDto);
 	}
 
-	@PostMapping("/users/trainers")
+	@PostMapping("/trainers/register")
 	public ResponseEntity<ResponseStructure<UserResponseDto>> registerTainer(
-			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO, @RequestParam UserRole role) {
-		UserResponseDto userResponseDto = userService.registerUser(registrationRequestDTO, role);
+			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO ) {
+		UserResponseDto userResponseDto = userService.registerUser(registrationRequestDTO, UserRole.TRAINER);
 		return responseBuilder.success(HttpStatus.CREATED, "Trainer Created successfully", userResponseDto);
 	}
 
-	@PutMapping("/users/trainers/{userId}")
+	@PutMapping("/trainers/{userId}/subjects")
 	public ResponseEntity<ResponseStructure<TrainerResponseDTO>> updateTrainerForSubject(
-			@RequestBody TrainerRequestDTO trainerRequestDTO, @PathVariable String userId) {
+			@RequestBody @Valid TrainerRequestDTO trainerRequestDTO, @PathVariable String userId) {
 		TrainerResponseDTO trainerResponseDTO = userService.updateTrainerForSubject(trainerRequestDTO, userId);
 		return responseBuilder.success(HttpStatus.OK, "Trainer Updated Successfully", trainerResponseDTO);
 	}
 
-	@PutMapping("/users/trainers/ratings/{rating-id}")
+	@PutMapping("/ratings/{ratingId}/students")
 	public ResponseEntity<ResponseStructure<RatingResponseDTO>> updateStudentRating(
 			@RequestBody @Valid RatingRequestDTO ratingRequestDTO, @PathVariable String ratingId) {
 		RatingResponseDTO ratingResponseDTO = userService.updateStudentRating(ratingRequestDTO, ratingId);
@@ -99,15 +78,14 @@ public class UserController {
 				ratingResponseDTO);
 	}
 
-	@PostMapping("/users/students")
+	@PostMapping("/students/register")
 	public ResponseEntity<ResponseStructure<UserResponseDto>> registerStudent(
-			@org.springframework.web.bind.annotation.RequestBody @Valid RegistrationRequestDTO registrationRequestDTO,
-			@RequestParam UserRole role) {
-		UserResponseDto userResponseDto = userService.registerUser(registrationRequestDTO, role);
+			@org.springframework.web.bind.annotation.RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
+		UserResponseDto userResponseDto = userService.registerUser(registrationRequestDTO, UserRole.STUDENT);
 		return responseBuilder.success(HttpStatus.CREATED, "Stduent Created successfully", userResponseDto);
 	}
 
-	@PutMapping("/users/students/{user-id}")
+	@PutMapping("/students/{userId}")
 	public ResponseEntity<ResponseStructure<StudentResponseDTO>> updateStudent(
 			@RequestBody StudentRequestDTO studentRequestDTO, @PathVariable String userId) {
 		StudentResponseDTO studentResponseDTO = userService.updateStudent(studentRequestDTO, userId);
@@ -115,7 +93,7 @@ public class UserController {
 		return responseBuilder.success(HttpStatus.OK, "Student updated succesfully", studentResponseDTO);
 	}
 
-	@PatchMapping("/users/students/{student-Id}")
+	@PatchMapping("/students/{studentId}/stacks")
 	public ResponseEntity<ResponseStructure<StudentResponseDTO>> updateStudentStack(@RequestParam Stack stack,
 			@PathVariable String studentId) {
 		StudentResponseDTO studentResponseDTO = userService.updatedStudentStack(stack, studentId);
@@ -123,8 +101,8 @@ public class UserController {
 		return responseBuilder.success(HttpStatus.OK, "stack successfully updated", studentResponseDTO);
 	}
 
-	@GetMapping("/users/students/ratings/{student-id}")
-	public ResponseEntity<ResponseStructure<List<RatingResponseDTO>>> getStudentRating(String studentId) {
+	@GetMapping("/students/{studentId}/ratings")
+	public ResponseEntity<ResponseStructure<List<RatingResponseDTO>>> getStudentRating(@PathVariable String studentId) {
 		List<RatingResponseDTO> ratingResponseDTOs = userService.getStudentRating(studentId);
 		return responseBuilder.success(HttpStatus.FOUND, "student object found succesfully", ratingResponseDTOs);
 	}

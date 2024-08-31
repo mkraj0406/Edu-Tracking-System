@@ -71,7 +71,6 @@ public class UserService {
 		return userMapper.mapUserToResponce(user);
 	}
 
-	
 	public TrainerResponseDTO updateTrainerForSubject(TrainerRequestDTO trainerRequestDTO, String userId) {
 		return userRepository.findById(userId).map(user -> {
 			Trainer trainer = (Trainer) user;
@@ -97,6 +96,7 @@ public class UserService {
 			stack.getSubjects().forEach(subject -> {
 				Rating rating = new Rating();
 				rating.setSubject(subject);
+				rating.setStudent(student);
 				ratingRepository.save(rating);
 			});
 			student.setStack(stack);
@@ -115,21 +115,6 @@ public class UserService {
 
 	}
 
-	public BatchResponseDTO updateBatch(BatchRequestDTO batchRequestDTO, String batchId) {
-		return batchRepository.findById(batchId).map(batch -> {
-			batch = batchMapper.mapBatchToEntity(batchRequestDTO, batch);
-			batch = batchRepository.save(batch);
-			return batchMapper.mapBatchToResponse(batch);
-		}).orElseThrow(() -> new ObjectNotFoundByIdException("batch not found by id!!"));
-	}
-
-	public BatchResponseDTO updateBatchStatus(BatchStatus batchStatus, String batchId) {
-		return batchRepository.findById(batchId).map(batch -> {
-			batch.setBatchStatus(batchStatus);
-			batchRepository.save(batch);
-			return batchMapper.mapBatchToResponse(batch);
-		}).orElseThrow(() -> new ObjectNotFoundByIdException("batch not found by id!!"));
-	}
 
 	public List<RatingResponseDTO> getStudentRating(String studentId) {
 		return userRepository.findById(studentId).map(user -> {
