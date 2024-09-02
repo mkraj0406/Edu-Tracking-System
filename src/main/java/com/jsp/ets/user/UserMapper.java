@@ -3,10 +3,6 @@ package com.jsp.ets.user;
 import org.springframework.stereotype.Component;
 
 import com.jsp.ets.security.RegistrationRequestDTO;
-import com.jsp.ets.student.StudentRequestDTO;
-import com.jsp.ets.student.StudentResponseDTO;
-import com.jsp.ets.trainer.TrainerRequestDTO;
-import com.jsp.ets.trainer.TrainerResponseDTO;
 
 @Component
 public class UserMapper {

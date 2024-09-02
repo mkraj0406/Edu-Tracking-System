@@ -1,12 +1,10 @@
-package com.jsp.ets.student;
+package com.jsp.ets.user;
 
 import java.time.Year;
 import java.util.List;
 
 import com.jsp.ets.rating.Rating;
 import com.jsp.ets.stack.Stack;
-import com.jsp.ets.user.Subject;
-import com.jsp.ets.user.UserResponseDto;
 
 import lombok.Getter;
 import lombok.Setter;

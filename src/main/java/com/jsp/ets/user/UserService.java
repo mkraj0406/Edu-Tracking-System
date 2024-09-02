@@ -21,10 +21,6 @@ import com.jsp.ets.rating.RatingRequestDTO;
 import com.jsp.ets.rating.RatingResponseDTO;
 import com.jsp.ets.security.RegistrationRequestDTO;
 import com.jsp.ets.stack.Stack;
-import com.jsp.ets.student.StudentRequestDTO;
-import com.jsp.ets.student.StudentResponseDTO;
-import com.jsp.ets.trainer.TrainerRequestDTO;
-import com.jsp.ets.trainer.TrainerResponseDTO;
 import com.jsp.ets.user.Admin;
 import com.jsp.ets.user.User;
 import com.jsp.ets.user.UserMapper;
@@ -105,22 +101,8 @@ public class UserService {
 		}).orElseThrow(() -> new ObjectNotFoundByIdException("student not found by id!!"));
 	}
 
-	public RatingResponseDTO updateStudentRating(RatingRequestDTO ratingRequestDTO, String ratingId) {
-		return ratingRepository.findById(ratingId).map(rating -> {
-			rating = ratingMapper.mapRatingToEntity(ratingRequestDTO, rating);
-			rating = ratingRepository.save(rating);
-			return ratingMapper.mapRatingToResponse(rating);
-
-		}).orElseThrow(() -> new ObjectNotFoundByIdException("rating object not found by id!!"));
-
-	}
+	
 
 
-	public List<RatingResponseDTO> getStudentRating(String studentId) {
-		return userRepository.findById(studentId).map(user -> {
-			Student student = (Student) user;
-			return student.getRatings().stream().map(rating -> ratingMapper.mapRatingToResponse(rating)).toList();
-		}).orElseThrow(() -> new ObjectNotFoundByIdException("batch not found by id!!"));
 
-	}
 }
