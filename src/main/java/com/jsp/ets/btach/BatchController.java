@@ -33,7 +33,7 @@ public class BatchController {
 			@RequestBody @Valid BatchRequestDTO batchRequestDTO) {
 		BatchResponseDTO batchResponseDTO = batchService.createBatch(batchRequestDTO);
 
-		return responseBuilder.success(HttpStatus.CREATED, "Batch succsessfully created", batchResponseDTO);
+		return responseBuilder.success(HttpStatus.CREATED, "Batch successfully created", batchResponseDTO);
 
 	}
 

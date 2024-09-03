@@ -1,35 +1,18 @@
 package com.jsp.ets.user;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-
+import com.jsp.ets.exception.StudentNotFoundByIdException;
+import com.jsp.ets.exception.TrainerNotFoundByIdException;
 import org.springframework.stereotype.Service;
 
 import com.jsp.ets.btach.BatchMapper;
 import com.jsp.ets.btach.BatchRepository;
-import com.jsp.ets.btach.BatchRequestDTO;
-import com.jsp.ets.btach.BatchResponseDTO;
-import com.jsp.ets.btach.BatchStatus;
-import com.jsp.ets.exception.ObjectNotFoundByIdException;
 
 import com.jsp.ets.rating.Rating;
 import com.jsp.ets.rating.RatingMapper;
 import com.jsp.ets.rating.RatingRepository;
-import com.jsp.ets.rating.RatingRequestDTO;
-import com.jsp.ets.rating.RatingResponseDTO;
 import com.jsp.ets.security.RegistrationRequestDTO;
 import com.jsp.ets.stack.Stack;
-import com.jsp.ets.user.Admin;
-import com.jsp.ets.user.User;
-import com.jsp.ets.user.UserMapper;
-import com.jsp.ets.user.UserRepository;
 
-import com.jsp.ets.user.UserResponseDto;
-
-import jakarta.persistence.Table;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 @Service
@@ -74,7 +57,7 @@ public class UserService {
 			trainer = userRepository.save(trainer);
 			return userMapper.mapTainerToResponce(trainer);
 
-		}).orElseThrow(() -> new ObjectNotFoundByIdException("Trainer not found by id!!"));
+		}).orElseThrow(() -> new TrainerNotFoundByIdException("Trainer not found by id!!"));
 
 	}
 
@@ -83,7 +66,7 @@ public class UserService {
 			userMapper.mapStudentToEntity(studentRequestDTO, (Student) user);
 			userRepository.save((Student) user);
 			return userMapper.mapStudentToResponse((Student) user);
-		}).orElseThrow(() -> new ObjectNotFoundByIdException("student not found by id!!"));
+		}).orElseThrow(() -> new StudentNotFoundByIdException("student not found by id!!"));
 	}
 
 	public StudentResponseDTO updatedStudentStack(Stack stack, String studentId) {
@@ -98,7 +81,7 @@ public class UserService {
 			student.setStack(stack);
 			userRepository.save(student);
 			return userMapper.mapStudentToResponse(student);
-		}).orElseThrow(() -> new ObjectNotFoundByIdException("student not found by id!!"));
+		}).orElseThrow(() -> new StudentNotFoundByIdException("student not found by id!!"));
 	}
 
 	

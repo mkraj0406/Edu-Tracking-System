@@ -17,6 +17,6 @@ public class UserRequestDTO {
 	private String username;
 
 	@NotNull(message = "email can't be null")
-	@Email(regexp = "^[a-zA-Z0-9._%+-]+@gmail.com$", message = "Invalid Email, The email should ends with @gamil.com")
+	@Email(regexp = "^[a-zA-Z0-9._%+-]+@gmail.com$", message = "Invalid Email, The email should ends with @gmail.com")
 	private String email;
 }
