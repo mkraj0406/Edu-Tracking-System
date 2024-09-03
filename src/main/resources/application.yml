@@ -5,9 +5,9 @@ spring:
 #database configuration
 
   datasource:
-    url: ${mysql.url}
-    username: ${mysql.username}
-    password: ${mysql.password}
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
 
   jpa:
     hibernate:
@@ -23,6 +23,6 @@ spring:
 
 
 #Application Configuration
-super_admin.email : ${super-admin.email}
+super_admin.email : ${SUPER-ADMIN_EMAIL}
 
 
