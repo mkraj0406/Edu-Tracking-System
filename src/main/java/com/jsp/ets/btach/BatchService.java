@@ -24,8 +24,8 @@ public class BatchService {
 	
 	public BatchResponseDTO updateBatch(BatchRequestDTO batchRequestDTO, String batchId) {
 		return batchRepository.findById(batchId).map(batch -> {
-			batch = batchMapper.mapBatchToEntity(batchRequestDTO, batch);
-			batch = batchRepository.save(batch);
+			batchMapper.mapBatchToEntity(batchRequestDTO, batch);
+			batchRepository.save(batch);
 			return batchMapper.mapBatchToResponse(batch);
 		}).orElseThrow(() -> new BatchNotFoundByIdException("batch not found by id!!"));
 	}
