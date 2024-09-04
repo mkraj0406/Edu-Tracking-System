@@ -2,8 +2,6 @@ package com.jsp.ets.exceptionhandler;
 
 import java.net.http.HttpHeaders;
 import java.util.ArrayList;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;

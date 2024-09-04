@@ -1,6 +1,5 @@
 package com.jsp.ets.user;
 
-import jakarta.validation.constraints.AssertFalse.List;
 
 public enum UserRole {
 

@@ -1,12 +1,6 @@
 package com.jsp.ets.user;
 
 import java.time.Year;
-import java.util.List;
-
-import com.jsp.ets.btach.Batch;
-import com.jsp.ets.rating.Rating;
-
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
