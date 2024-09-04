@@ -51,7 +51,7 @@ public class UserMapper {
 		student.setUsername(studentRequestDTO.getUsername());
 		student.setEmail(studentRequestDTO.getEmail());
 		student.setDegree(studentRequestDTO.getDegree());
-		student.setYear_of_passout(studentRequestDTO.getYear_of_passout());
+		student.setYop(studentRequestDTO.getYop());
 		student.setStream(studentRequestDTO.getStream());
 		student.setDegreePercentage(studentRequestDTO.getDegreePercentage());
 		student.setTwelthPercentage(studentRequestDTO.getTwelthPercentage());
@@ -65,7 +65,7 @@ public class UserMapper {
 		studentResponseDTO.setUserId(student.getUserId());
 		studentResponseDTO.setEmail(student.getEmail());
 		studentResponseDTO.setDegree(student.getDegree());
-		studentResponseDTO.setYear_of_passout(student.getYear_of_passout());
+		studentResponseDTO.setYop(student.getYop());
 		studentResponseDTO.setStream(student.getStream());
 		studentResponseDTO.setDegreePercentage(student.getDegreePercentage());
 		studentResponseDTO.setTwelthPercentage(student.getTwelthPercentage());

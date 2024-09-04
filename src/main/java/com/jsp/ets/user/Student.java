@@ -31,7 +31,7 @@ public class Student extends User {
 	private String stream;
 
 	@Column(name = "year_of_passout")
-	private Year year_of_passout;
+	private Year yop;
 
 	@Column(name = "degree_percentage")
 	private int degreePercentage;

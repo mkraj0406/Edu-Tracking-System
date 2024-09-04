@@ -12,7 +12,7 @@ public class StudentRequestDTO extends UserRequestDTO {
 	
 	private String stream;
 	
-	private Year year_of_passout;
+	private Year yop;
 	
 	private int degreePercentage;
 	
