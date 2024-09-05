@@ -1,7 +1,11 @@
 package com.jsp.ets.user;
 
+import com.jsp.ets.config.RandomGenerator;
 import com.jsp.ets.exception.StudentNotFoundByIdException;
 import com.jsp.ets.exception.TrainerNotFoundByIdException;
+import com.jsp.ets.utility.MailSender;
+import com.jsp.ets.utility.MessageModel;
+import jakarta.mail.MessagingException;
 import org.springframework.stereotype.Service;
 
 import com.jsp.ets.btach.BatchMapper;
@@ -14,6 +18,9 @@ import com.jsp.ets.security.RegistrationRequestDTO;
 import com.jsp.ets.stack.Stack;
 
 import lombok.AllArgsConstructor;
+
+import java.util.Date;
+import java.util.Random;
 
 @Service
 @AllArgsConstructor
@@ -30,6 +37,10 @@ public class UserService {
 	private RatingMapper ratingMapper;
 
 	private BatchMapper batchMapper;
+
+	private MailSender mailSender;
+
+	private Random random;
 
 	public UserResponseDto registerUser(RegistrationRequestDTO registrationRequestDto, UserRole role) {
 		User user = null;
@@ -85,8 +96,26 @@ public class UserService {
 	}
 
 
-	private  void sendVerificationOtpToUser(String email){
-
+	private  void sendVerificationOtpToUser(User user,int otp) throws MessagingException {
+		String text="<!DOCTYPE html>\n" +
+				"<html lang=\"en\">\n" +
+				"<head>\n" +
+				"    <meta charset=\"UTF-8\">\n" +
+				"    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+				"    <title>Document</title>\n" +
+				"</head>\n" +
+				"<body>\n" +
+				"    <h1>Hi this is edu_app please verify your email</h1>\n" +
+				"<h1>Please use this otp given beloe for further verification</h1>"+
+				"<h4>" + otp + "</h4>"+
+				"</body>\n" +
+				"</html>";
+		MessageModel messageModel = new MessageModel();
+		messageModel.setTo(user.getEmail());
+		messageModel.setSubject("Verify your email for to confim registration");
+		messageModel.setSendDate(new Date());
+		messageModel.setText(text);
+		mailSender.sendMail(messageModel);
 	}
 
 
