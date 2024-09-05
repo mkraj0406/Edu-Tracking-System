@@ -84,8 +84,10 @@ public class UserService {
 		}).orElseThrow(() -> new StudentNotFoundByIdException("student not found by id!!"));
 	}
 
-	
 
+	private  void sendVerificationOtpToUser(String email){
+
+	}
 
 
 }
