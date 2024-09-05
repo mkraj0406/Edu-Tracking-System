@@ -6,6 +6,8 @@ import com.jsp.ets.exception.TrainerNotFoundByIdException;
 import com.jsp.ets.utility.MailSender;
 import com.jsp.ets.utility.MessageModel;
 import jakarta.mail.MessagingException;
+import org.hibernate.annotations.Cache;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.stereotype.Service;
 
 import com.jsp.ets.btach.BatchMapper;
@@ -42,6 +44,8 @@ public class UserService {
 
 	private Random random;
 
+
+	@CachePut(cacheNames = "Non-verified-user" , key = "#registrationRequestDto.email")
 	public UserResponseDto registerUser(RegistrationRequestDTO registrationRequestDto, UserRole role) {
 		User user = null;
 		switch (role) {
