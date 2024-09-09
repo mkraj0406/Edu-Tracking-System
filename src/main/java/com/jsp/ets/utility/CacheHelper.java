@@ -3,8 +3,9 @@ package com.jsp.ets.utility;
 import com.jsp.ets.user.User;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class CacheHelper {
 
     @CachePut(cacheNames = "Non-verified-user",key = "#user.email")

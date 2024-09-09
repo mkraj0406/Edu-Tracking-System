@@ -12,6 +12,5 @@ public class RandomGenerator {
     @Bean
      Random random(){
         return  new SecureRandom();
-
      }
 }

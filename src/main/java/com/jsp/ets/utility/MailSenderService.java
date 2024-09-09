@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class MailSender {
+public class MailSenderService {
 
     private JavaMailSender javaMailSender;
 
@@ -22,5 +22,7 @@ public class MailSender {
         helper.setSentDate(messageModel.getSendDate());
         helper.setSubject(messageModel.getSubject());
         helper.setText(messageModel.getText(),true);
+
+        javaMailSender.send(mimeMessage);
     }
 }

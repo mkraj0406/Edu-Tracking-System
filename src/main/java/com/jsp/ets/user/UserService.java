@@ -1,13 +1,13 @@
 package com.jsp.ets.user;
 
-import com.jsp.ets.config.RandomGenerator;
+
 import com.jsp.ets.exception.StudentNotFoundByIdException;
 import com.jsp.ets.exception.TrainerNotFoundByIdException;
-import com.jsp.ets.utility.MailSender;
+import com.jsp.ets.utility.CacheHelper;
+import com.jsp.ets.utility.MailSenderService;
 import com.jsp.ets.utility.MessageModel;
 import jakarta.mail.MessagingException;
-import org.hibernate.annotations.Cache;
-import org.springframework.cache.annotation.CachePut;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import com.jsp.ets.btach.BatchMapper;
@@ -24,6 +24,7 @@ import lombok.AllArgsConstructor;
 import java.util.Date;
 import java.util.Random;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class UserService {
@@ -40,13 +41,13 @@ public class UserService {
 
 	private BatchMapper batchMapper;
 
-	private MailSender mailSender;
+	private MailSenderService mailSenderService;
 
 	private Random random;
 
+	private CacheHelper cacheHelper;
 
-	@CachePut(cacheNames = "Non-verified-user" , key = "#registrationRequestDto.email")
-	public UserResponseDto registerUser(RegistrationRequestDTO registrationRequestDto, UserRole role) {
+	public UserResponseDto registerUser(RegistrationRequestDTO registrationRequestDto, UserRole role) throws MessagingException {
 		User user = null;
 		switch (role) {
 		case ADMIN -> user = new Admin();
@@ -59,7 +60,14 @@ public class UserService {
 		if (user != null) {
 			user = userMapper.mapUserToEntity(registrationRequestDto, user);
 			user.setRole(role);
-			Integer otp = random.nextInt(100000,999999);
+			int otp = random.nextInt(100000,999999);
+			cacheHelper.userCache(user);
+			cacheHelper.otpCache(otp);
+			try {
+				sendVerificationOtpToUser(user,otp);
+			}catch (MessagingException e){
+				log.info("Messaging exception occurred");
+			}
 		}
 
 		return userMapper.mapUserToResponce(user);
@@ -110,16 +118,16 @@ public class UserService {
 				"</head>\n" +
 				"<body>\n" +
 				"    <h1>Hi this is edu_app please verify your email</h1>\n" +
-				"<h1>Please use this otp given beloe for further verification</h1>"+
+				"<h1>Please use this otp given below for further verification</h1>"+
 				"<h4>" + otp + "</h4>"+
 				"</body>\n" +
 				"</html>";
 		MessageModel messageModel = new MessageModel();
 		messageModel.setTo(user.getEmail());
-		messageModel.setSubject("Verify your email for to confim registration");
+		messageModel.setSubject("Verify your email for to confirm registration");
 		messageModel.setSendDate(new Date());
 		messageModel.setText(text);
-		mailSender.sendMail(messageModel);
+		mailSenderService.sendMail(messageModel);
 	}
 
 
