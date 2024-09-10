@@ -1,9 +1,7 @@
 package com.jsp.ets.btach;
 
-import java.time.LocalDateTime;
-import java.util.List;
 
-import org.springframework.data.annotation.CreatedDate;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -14,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsp.ets.user.Subject;
+
 import com.jsp.ets.utility.AppResponseBuilder;
 import com.jsp.ets.utility.ResponseStructure;
 
-import jakarta.persistence.Column;
+
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
@@ -35,7 +33,7 @@ public class BatchController {
 			@RequestBody @Valid BatchRequestDTO batchRequestDTO) {
 		BatchResponseDTO batchResponseDTO = batchService.createBatch(batchRequestDTO);
 
-		return responseBuilder.success(HttpStatus.CREATED, "Batch succsessfully created", batchResponseDTO);
+		return responseBuilder.success(HttpStatus.CREATED, "Batch successfully created", batchResponseDTO);
 
 	}
 

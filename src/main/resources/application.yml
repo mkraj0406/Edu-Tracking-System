@@ -2,27 +2,38 @@ spring:
   application:
     name: Edu-Tracking-System
 
-#database configuration
-
   datasource:
-    url: ${mysql.url}
-    username: ${mysql.username}
-    password: ${mysql.password}
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
 
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+      show-sql: true
     properties:
       hibernate:
-        dialect: 
-          org:
-            hibernate:
-              dialect:  MySQL8Dialect
-        formate_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
 
+# Application Configuration
+super_admin:
+  email: ${SUPER-ADMIN_EMAIL}
 
-#Application Configuration
-super_admin.email : ${super-admin.email}
+  # Mail Configuration
 
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+            required: true
+  # ehcache config
+  cache:
+    jcache:
+      config: "classpath:ehcache.xml"

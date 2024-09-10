@@ -1,11 +1,8 @@
 package com.jsp.ets.user;
 
-import java.util.List;
 
-import org.springframework.context.support.BeanDefinitionDsl.Role;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,14 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsp.ets.btach.BatchRequestDTO;
-import com.jsp.ets.btach.BatchResponseDTO;
-import com.jsp.ets.btach.BatchStatus;
-import com.jsp.ets.rating.RatingRequestDTO;
-import com.jsp.ets.rating.RatingResponseDTO;
 import com.jsp.ets.security.RegistrationRequestDTO;
 import com.jsp.ets.stack.Stack;
-import com.jsp.ets.user.UserResponseDto;
+
 import com.jsp.ets.utility.AppResponseBuilder;
 
 import com.jsp.ets.utility.ResponseStructure;
@@ -30,7 +22,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 

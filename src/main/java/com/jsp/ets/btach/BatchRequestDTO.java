@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
-import org.springframework.data.annotation.CreatedDate;
+
 
 import com.jsp.ets.user.Subject;
 
-import jakarta.persistence.Column;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

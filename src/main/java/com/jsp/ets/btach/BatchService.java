@@ -1,8 +1,7 @@
 package com.jsp.ets.btach;
 
+import com.jsp.ets.exception.BatchNotFoundByIdException;
 import org.springframework.stereotype.Service;
-
-import com.jsp.ets.exception.ObjectNotFoundByIdException;
 
 
 import lombok.AllArgsConstructor;
@@ -19,17 +18,16 @@ public class BatchService {
 		 Batch batch = batchMapper.mapBatchToEntity(batchRequestDto, new Batch());
 		 batch.setBatchStatus(BatchStatus.CREATED);
 		 batch = batchRepository.save(batch);
-		 BatchResponseDTO batchResponseDTO = batchMapper.mapBatchToResponse(batch);
-		 return batchResponseDTO;
+		 return batchMapper.mapBatchToResponse(batch);
 	}
 	
 	
 	public BatchResponseDTO updateBatch(BatchRequestDTO batchRequestDTO, String batchId) {
 		return batchRepository.findById(batchId).map(batch -> {
-			batch = batchMapper.mapBatchToEntity(batchRequestDTO, batch);
-			batch = batchRepository.save(batch);
+			batchMapper.mapBatchToEntity(batchRequestDTO, batch);
+			batchRepository.save(batch);
 			return batchMapper.mapBatchToResponse(batch);
-		}).orElseThrow(() -> new ObjectNotFoundByIdException("batch not found by id!!"));
+		}).orElseThrow(() -> new BatchNotFoundByIdException("batch not found by id!!"));
 	}
 
 	public BatchResponseDTO updateBatchStatus(BatchStatus batchStatus, String batchId) {
@@ -37,7 +35,7 @@ public class BatchService {
 			batch.setBatchStatus(batchStatus);
 			batchRepository.save(batch);
 			return batchMapper.mapBatchToResponse(batch);
-		}).orElseThrow(() -> new ObjectNotFoundByIdException("batch not found by id!!"));
+		}).orElseThrow(() -> new BatchNotFoundByIdException("batch not found by id!!"));
 	}
 
 }

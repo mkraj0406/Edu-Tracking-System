@@ -17,7 +17,7 @@ public class StudentResponseDTO extends UserResponseDto {
 
 	private String stream;
 
-	private Year year_of_passout;
+	private Year yop;
 
 	private int degreePercentage;
 
