@@ -1,6 +1,7 @@
 package com.jsp.ets.user;
 
 
+import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -41,10 +42,9 @@ public class UserController {
 			}) })
 	@PostMapping("/admins/register")
 	public ResponseEntity<ResponseStructure<UserResponseDto>> registerAdmin(
-			@org.springframework.web.bind.annotation.RequestBody @Valid RegistrationRequestDTO registrationRequestDTO,
-			@RequestParam UserRole role) {
-		UserResponseDto userResponseDto = userService.registerUser(registrationRequestDTO, role);
-		return responseBuilder.success(HttpStatus.CREATED, "Admin successfully registered", userResponseDto);
+			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
+		UserResponseDto userResponseDto = userService.registerUser(registrationRequestDTO, UserRole.ADMIN);
+		return responseBuilder.success(HttpStatus.ACCEPTED, "Admin successfully registered", userResponseDto);
 	}
 
 	@Operation(description = "The API endpoint is used to register the HR", responses = {
@@ -55,7 +55,7 @@ public class UserController {
 			}) })
 	@PostMapping("/hr/register")
 	public ResponseEntity<ResponseStructure<UserResponseDto>> registerHR(
-			@org.springframework.web.bind.annotation.RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
+			@org.springframework.web.bind.annotation.RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponseDto userResponseDto = userService.registerUser(registrationRequestDTO, UserRole.HR);
 		return responseBuilder.success(HttpStatus.CREATED, "HR Created successfully", userResponseDto);
 	}
@@ -68,7 +68,7 @@ public class UserController {
 			}) })
 	@PostMapping("/trainers/register")
 	public ResponseEntity<ResponseStructure<UserResponseDto>> registerTainer(
-			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
+			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponseDto userResponseDto = userService.registerUser(registrationRequestDTO, UserRole.TRAINER);
 		return responseBuilder.success(HttpStatus.CREATED, "Trainer Created successfully", userResponseDto);
 	}
@@ -94,13 +94,13 @@ public class UserController {
 			}) })
 	@PostMapping("/students/register")
 	public ResponseEntity<ResponseStructure<UserResponseDto>> registerStudent(
-			@org.springframework.web.bind.annotation.RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) {
+			@org.springframework.web.bind.annotation.RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponseDto userResponseDto = userService.registerUser(registrationRequestDTO, UserRole.STUDENT);
-		return responseBuilder.success(HttpStatus.CREATED, "Stduent Created successfully", userResponseDto);
+		return responseBuilder.success(HttpStatus.CREATED, "Student Created successfully", userResponseDto);
 	}
 
 	@Operation(description = "The API endpoint is used to update Students with additinal details", responses = {
-			@ApiResponse(responseCode = "201", description = "Stdent updated succesfully"),
+			@ApiResponse(responseCode = "201", description = "Student updated successfully"),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
 					@Content(schema = @Schema(anyOf = RuntimeException.class))
 
@@ -110,7 +110,7 @@ public class UserController {
 			@RequestBody StudentRequestDTO studentRequestDTO, @PathVariable String userId) {
 		StudentResponseDTO studentResponseDTO = userService.updateStudent(studentRequestDTO, userId);
 
-		return responseBuilder.success(HttpStatus.OK, "Student updated succesfully", studentResponseDTO);
+		return responseBuilder.success(HttpStatus.OK, "Student updated successfully", studentResponseDTO);
 	}
 
 	@Operation(description = "The API endpoint is used to update Student For Stack", responses = {
@@ -127,4 +127,9 @@ public class UserController {
 		return responseBuilder.success(HttpStatus.OK, "stack successfully updated", studentResponseDTO);
 	}
 
+	@PostMapping("/verification")
+	public ResponseEntity<ResponseStructure<UserResponseDto>> userOtpVerfication(@RequestBody OtpRequestDTO otpRequestDTO){
+		 UserResponseDto userResponseDto= userService.userOtpVerification(otpRequestDTO);
+		 return responseBuilder.success(HttpStatus.CREATED,"Otp verified successfully",userResponseDto);
+	}
 }

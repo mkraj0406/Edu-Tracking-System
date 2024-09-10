@@ -1,14 +1,11 @@
 package com.jsp.ets.exceptionhandler;
 
+import com.jsp.ets.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import com.jsp.ets.exception.BatchNotFoundByIdException;
-import com.jsp.ets.exception.RatingNotFoundByIdException;
-import com.jsp.ets.exception.StudentNotFoundByIdException;
-import com.jsp.ets.exception.TrainerNotFoundByIdException;
 import com.jsp.ets.utility.AppResponseBuilder;
 import com.jsp.ets.utility.ErrorStructure;
 
@@ -39,5 +36,10 @@ public class ApplicationHandler {
 	@ExceptionHandler(BatchNotFoundByIdException.class)
 	public ResponseEntity<ErrorStructure<String>> handlerUserNotFoundById(BatchNotFoundByIdException ex) {
 		return errorResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(), "batch not found by given id!!");
+	}
+
+	@ExceptionHandler(RegistrationSessionExpired.class)
+	public ResponseEntity<ErrorStructure<String>> handlerUserNotFoundById(RegistrationSessionExpired ex) {
+		return errorResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(), "Registration  session got expired!!");
 	}
 }

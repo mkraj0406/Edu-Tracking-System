@@ -1,7 +1,15 @@
 package com.jsp.ets.user;
 
+
+import com.jsp.ets.exception.RegistrationSessionExpired;
 import com.jsp.ets.exception.StudentNotFoundByIdException;
 import com.jsp.ets.exception.TrainerNotFoundByIdException;
+import com.jsp.ets.utility.CacheHelper;
+import com.jsp.ets.utility.MailSenderService;
+import com.jsp.ets.utility.MessageModel;
+import jakarta.mail.MessagingException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.jsp.ets.btach.BatchMapper;
@@ -15,6 +23,10 @@ import com.jsp.ets.stack.Stack;
 
 import lombok.AllArgsConstructor;
 
+import java.util.Date;
+import java.util.Random;
+
+@Slf4j
 @Service
 @AllArgsConstructor
 public class UserService {
@@ -31,7 +43,13 @@ public class UserService {
 
 	private BatchMapper batchMapper;
 
-	public UserResponseDto registerUser(RegistrationRequestDTO registrationRequestDto, UserRole role) {
+	private MailSenderService mailSenderService;
+
+	private Random random;
+
+	private CacheHelper cacheHelper;
+
+	public UserResponseDto registerUser(RegistrationRequestDTO registrationRequestDto, UserRole role) throws MessagingException {
 		User user = null;
 		switch (role) {
 		case ADMIN -> user = new Admin();
@@ -44,7 +62,14 @@ public class UserService {
 		if (user != null) {
 			user = userMapper.mapUserToEntity(registrationRequestDto, user);
 			user.setRole(role);
-			user = userRepository.save(user);
+			int otp = random.nextInt(100000,999999);
+			cacheHelper.userCache(user);
+			cacheHelper.otpCache(otp, user.getEmail());
+			try {
+				sendVerificationOtpToUser(user,otp);
+			}catch (MessagingException e){
+				log.info("Messaging exception occurred");
+			}
 		}
 
 		return userMapper.mapUserToResponce(user);
@@ -84,8 +109,41 @@ public class UserService {
 		}).orElseThrow(() -> new StudentNotFoundByIdException("student not found by id!!"));
 	}
 
-	
+
+	private  void sendVerificationOtpToUser(User user,int otp) throws MessagingException {
+		String text="<!DOCTYPE html>\n" +
+				"<html lang=\"en\">\n" +
+				"<head>\n" +
+				"    <meta charset=\"UTF-8\">\n" +
+				"    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+				"    <title>Document</title>\n" +
+				"</head>\n" +
+				"<body>\n" +
+				"    <h1>Hi this is edu_app please verify your email</h1>\n" +
+				"<h1>Please use this otp given below for further verification</h1>"+
+				"<h4>" + otp + "</h4>"+
+				"</body>\n" +
+				"</html>";
+		MessageModel messageModel = new MessageModel();
+		messageModel.setTo(user.getEmail());
+		messageModel.setSubject("Verify your email for to confirm registration");
+		messageModel.setSendDate(new Date());
+		messageModel.setText(text);
+		mailSenderService.sendMail(messageModel);
+	}
 
 
 
+	public UserResponseDto userOtpVerification(OtpRequestDTO otpRequestDTO) {
+		Integer otp = cacheHelper.getOtpToVerify(otpRequestDTO.getEmail());
+		User user = cacheHelper.getRegistrationUser(otpRequestDTO.getEmail());
+
+		if((otp != null && otp.equals(otpRequestDTO.getOtp())) && (user !=null && user.getEmail().equals(otpRequestDTO.getEmail()))){
+			 user = userRepository.save(user);
+			 UserResponseDto userResponseDto=  userMapper.mapUserToResponce(user);
+			return userResponseDto;
+		}else{
+			throw new  RegistrationSessionExpired("otp is incorrect or otp may expired, please try again");
+		}
+	}
 }

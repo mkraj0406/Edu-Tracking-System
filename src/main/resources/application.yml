@@ -16,10 +16,6 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
 
-# Application Configuration
-super_admin:
-  email: ${SUPER-ADMIN_EMAIL}
-
   # Mail Configuration
 
   mail:
@@ -37,3 +33,9 @@ super_admin:
   cache:
     jcache:
       config: "classpath:ehcache.xml"
+
+# Application Configuration
+super_admin:
+  email: ${SUPER-ADMIN_EMAIL}
+
+

@@ -1,12 +1,13 @@
 package com.jsp.ets.utility;
 
+
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
 
-@Setter
 @Getter
+@Setter
 public class MessageModel {
     private String to;
     private Date sendDate;
