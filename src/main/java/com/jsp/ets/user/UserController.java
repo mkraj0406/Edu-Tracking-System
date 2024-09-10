@@ -96,11 +96,11 @@ public class UserController {
 	public ResponseEntity<ResponseStructure<UserResponseDto>> registerStudent(
 			@org.springframework.web.bind.annotation.RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponseDto userResponseDto = userService.registerUser(registrationRequestDTO, UserRole.STUDENT);
-		return responseBuilder.success(HttpStatus.CREATED, "Stduent Created successfully", userResponseDto);
+		return responseBuilder.success(HttpStatus.CREATED, "Student Created successfully", userResponseDto);
 	}
 
 	@Operation(description = "The API endpoint is used to update Students with additinal details", responses = {
-			@ApiResponse(responseCode = "201", description = "Stdent updated succesfully"),
+			@ApiResponse(responseCode = "201", description = "Student updated successfully"),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = {
 					@Content(schema = @Schema(anyOf = RuntimeException.class))
 
@@ -110,7 +110,7 @@ public class UserController {
 			@RequestBody StudentRequestDTO studentRequestDTO, @PathVariable String userId) {
 		StudentResponseDTO studentResponseDTO = userService.updateStudent(studentRequestDTO, userId);
 
-		return responseBuilder.success(HttpStatus.OK, "Student updated succesfully", studentResponseDTO);
+		return responseBuilder.success(HttpStatus.OK, "Student updated successfully", studentResponseDTO);
 	}
 
 	@Operation(description = "The API endpoint is used to update Student For Stack", responses = {
@@ -127,4 +127,9 @@ public class UserController {
 		return responseBuilder.success(HttpStatus.OK, "stack successfully updated", studentResponseDTO);
 	}
 
+	@PostMapping("/verification")
+	public ResponseEntity<ResponseStructure<UserResponseDto>> userOtpVerfication(@RequestBody OtpRequestDTO otpRequestDTO){
+		 UserResponseDto userResponseDto= userService.userOtpVerification(otpRequestDTO);
+		 return responseBuilder.success(HttpStatus.CREATED,"Otp verified successfully",userResponseDto);
+	}
 }

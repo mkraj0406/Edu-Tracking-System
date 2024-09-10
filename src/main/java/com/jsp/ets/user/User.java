@@ -1,5 +1,6 @@
 package com.jsp.ets.user;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -25,7 +26,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
 
 	@Column(name = "userId")
 	@jakarta.persistence.Id

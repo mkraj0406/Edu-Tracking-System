@@ -1,6 +1,7 @@
 package com.jsp.ets.user;
 
 
+import com.jsp.ets.exception.RegistrationSessionExpired;
 import com.jsp.ets.exception.StudentNotFoundByIdException;
 import com.jsp.ets.exception.TrainerNotFoundByIdException;
 import com.jsp.ets.utility.CacheHelper;
@@ -8,6 +9,7 @@ import com.jsp.ets.utility.MailSenderService;
 import com.jsp.ets.utility.MessageModel;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.jsp.ets.btach.BatchMapper;
@@ -62,7 +64,7 @@ public class UserService {
 			user.setRole(role);
 			int otp = random.nextInt(100000,999999);
 			cacheHelper.userCache(user);
-			cacheHelper.otpCache(otp);
+			cacheHelper.otpCache(otp, user.getEmail());
 			try {
 				sendVerificationOtpToUser(user,otp);
 			}catch (MessagingException e){
@@ -131,4 +133,17 @@ public class UserService {
 	}
 
 
+
+	public UserResponseDto userOtpVerification(OtpRequestDTO otpRequestDTO) {
+		Integer otp = cacheHelper.getOtpToVerify(otpRequestDTO.getEmail());
+		User user = cacheHelper.getRegistrationUser(otpRequestDTO.getEmail());
+
+		if((otp != null && otp.equals(otpRequestDTO.getOtp())) && (user !=null && user.getEmail().equals(otpRequestDTO.getEmail()))){
+			 user = userRepository.save(user);
+			 UserResponseDto userResponseDto=  userMapper.mapUserToResponce(user);
+			return userResponseDto;
+		}else{
+			throw new  RegistrationSessionExpired("otp is incorrect or otp may expired, please try again");
+		}
+	}
 }
