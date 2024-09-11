@@ -3,6 +3,7 @@ package com.jsp.ets.exceptionhandler;
 import com.jsp.ets.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -41,5 +42,10 @@ public class ApplicationHandler {
 	@ExceptionHandler(RegistrationSessionExpired.class)
 	public ResponseEntity<ErrorStructure<String>> handlerUserNotFoundById(RegistrationSessionExpired ex) {
 		return errorResponseBuilder.error(HttpStatus.NOT_FOUND, ex.getMessage(), "Registration  session got expired!!");
+	}
+
+	@ExceptionHandler(UsernameNotFoundException.class)
+	public  ResponseEntity<ErrorStructure<String>> handlerUsernameNotFoundException(UsernameNotFoundException ex){
+		return  errorResponseBuilder.error(HttpStatus.NOT_FOUND,ex.getMessage(),"User email not found!!");
 	}
 }
