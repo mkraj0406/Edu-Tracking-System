@@ -9,5 +9,7 @@ public class JwtService {
     @Value("${myapp.jwt.secret}")
     private  String jwsSecret;
 
+    @Value("${myapp.jwt.access_expiry}")
+    private  int access_expiry;
 
 }
