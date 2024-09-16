@@ -34,6 +34,11 @@ spring:
     jcache:
       config: "classpath:ehcache.xml"
 
+#Jwt configuration
+myapp:
+  jwt:
+    secret: ${JWT_SECRET}
+
 # Application Configuration
 super_admin:
   email: ${SUPER-ADMIN_EMAIL}
