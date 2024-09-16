@@ -46,6 +46,6 @@ public class ApplicationHandler {
 
 	@ExceptionHandler(UsernameNotFoundException.class)
 	public  ResponseEntity<ErrorStructure<String>> handlerUsernameNotFoundException(UsernameNotFoundException ex){
-		return  errorResponseBuilder.error(HttpStatus.NOT_FOUND,ex.getMessage(),"User email not found!!");
+		return  errorResponseBuilder.error(HttpStatus.NOT_FOUND,ex.getMessage(),"Failed to find the user!!");
 	}
 }

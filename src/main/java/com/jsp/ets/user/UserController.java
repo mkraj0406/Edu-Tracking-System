@@ -127,7 +127,7 @@ public class UserController {
 		return responseBuilder.success(HttpStatus.OK, "stack successfully updated", studentResponseDTO);
 	}
 
-	@PostMapping("/verification")
+	@PostMapping("/verify/users/register")
 	public ResponseEntity<ResponseStructure<UserResponseDto>> userOtpVerfication(@RequestBody OtpRequestDTO otpRequestDTO){
 		 UserResponseDto userResponseDto= userService.userOtpVerification(otpRequestDTO);
 		 return responseBuilder.success(HttpStatus.CREATED,"Otp verified successfully",userResponseDto);

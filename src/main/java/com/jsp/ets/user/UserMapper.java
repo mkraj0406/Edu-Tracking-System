@@ -10,6 +10,7 @@ public class UserMapper {
 	public User mapUserToEntity(RegistrationRequestDTO registrationRequestDTO, User user) {
 		user.setUsername(registrationRequestDTO.getUsername());
 		user.setEmail(registrationRequestDTO.getEmail());
+		user.setPassword(registrationRequestDTO.getPassword());
 		return user;
 	}
 
