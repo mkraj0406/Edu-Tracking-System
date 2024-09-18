@@ -21,32 +21,31 @@ import java.util.List;
 @AllArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
-    private  final JwtService jwtService;
-
+    private final JwtService jwtService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-       String token = request.getHeader("authorization");
-       if(token!=null){
-           token = token.substring(7);
-           if(!token.equals("")){
-               Claims claims =jwtService.parseJwt(token);
-              String email= claims.get("email",String.class);
-              String role= claims.get("role",String.class);
-               if(email!=null && role!= null){
-                  UserRole userRole = UserRole.valueOf(role);
+        String token = request.getHeader("authorization");
+        if (token != null) {
+            token = token.substring(7);
+            if (!token.equals("")) {
+                Claims claims = jwtService.parseJwt(token);
+                String email = claims.get("email", String.class);
+                String role = claims.get("role", String.class);
+                if (email != null && role != null) {
+                    UserRole userRole = UserRole.valueOf(role);
 
-                  UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(email,null,userRole
-                           .getUserRole()
-                           .stream()
-                           .map(privilege -> new SimpleGrantedAuthority(privilege.name()))
-                           .toList()
-                   );
-                  usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetails(request));
-                   SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-               }
-           }
-       }
-        filterChain.doFilter(request,response);
+                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(email, null, userRole
+                            .getUserRole()
+                            .stream()
+                            .map(privilege -> new SimpleGrantedAuthority(privilege.name()))
+                            .toList()
+                    );
+                    usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                }
+            }
+        }
+        filterChain.doFilter(request, response);
     }
 }

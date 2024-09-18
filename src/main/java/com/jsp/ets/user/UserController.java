@@ -129,7 +129,7 @@ public class UserController {
 
 
 
-	@PostMapping("/logins")
+	@PostMapping("/login")
 	public String login(@RequestBody LoginRequestDTO loginRequestDTO){
 		 String token =  userService.loginUser(loginRequestDTO);
 		System.out.println(token);
