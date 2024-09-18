@@ -1,8 +1,9 @@
 package com.jsp.ets.security;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.io.Decoder;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,5 +32,11 @@ public class JwtService {
 
     private Key getSignupKey(){
       return  Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwsSecret));
+    }
+
+    public Claims parseJwt(String token){
+     JwtParser jwtParser =  Jwts.parserBuilder()
+                .setSigningKey(getSignupKey()).build();
+     return jwtParser.parseClaimsJws(token).getBody();
     }
 }

@@ -4,13 +4,7 @@ package com.jsp.ets.user;
 import jakarta.mail.MessagingException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.jsp.ets.security.RegistrationRequestDTO;
 import com.jsp.ets.stack.Stack;
@@ -40,7 +34,7 @@ public class UserController {
 					@Content(schema = @Schema(anyOf = RuntimeException.class))
 
 			}) })
-	@PostMapping("/admins/register")
+	@PostMapping("/register/admins")
 	public ResponseEntity<ResponseStructure<UserResponseDto>> registerAdmin(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponseDto userResponseDto = userService.registerUser(registrationRequestDTO, UserRole.ADMIN);
@@ -66,7 +60,7 @@ public class UserController {
 					@Content(schema = @Schema(anyOf = RuntimeException.class))
 
 			}) })
-	@PostMapping("/trainers/register")
+	@PostMapping("/register/trainers")
 	public ResponseEntity<ResponseStructure<UserResponseDto>> registerTainer(
 			@RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponseDto userResponseDto = userService.registerUser(registrationRequestDTO, UserRole.TRAINER);
@@ -92,7 +86,7 @@ public class UserController {
 					@Content(schema = @Schema(anyOf = RuntimeException.class))
 
 			}) })
-	@PostMapping("/students/register")
+	@PostMapping("/register/students")
 	public ResponseEntity<ResponseStructure<UserResponseDto>> registerStudent(
 			@org.springframework.web.bind.annotation.RequestBody @Valid RegistrationRequestDTO registrationRequestDTO) throws MessagingException {
 		UserResponseDto userResponseDto = userService.registerUser(registrationRequestDTO, UserRole.STUDENT);
@@ -132,4 +126,16 @@ public class UserController {
 		 UserResponseDto userResponseDto= userService.userOtpVerification(otpRequestDTO);
 		 return responseBuilder.success(HttpStatus.CREATED,"Otp verified successfully",userResponseDto);
 	}
+
+
+
+	@PostMapping("/logins")
+	public String login(@RequestBody LoginRequestDTO loginRequestDTO){
+		 String token =  userService.loginUser(loginRequestDTO);
+		System.out.println(token);
+		return token;
+	}
+
+
+
 }

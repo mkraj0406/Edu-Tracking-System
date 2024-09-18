@@ -4,12 +4,17 @@ package com.jsp.ets.user;
 import com.jsp.ets.exception.RegistrationSessionExpired;
 import com.jsp.ets.exception.StudentNotFoundByIdException;
 import com.jsp.ets.exception.TrainerNotFoundByIdException;
+import com.jsp.ets.security.JwtService;
 import com.jsp.ets.utility.CacheHelper;
 import com.jsp.ets.utility.MailSenderService;
 import com.jsp.ets.utility.MessageModel;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.jsp.ets.btach.BatchMapper;
@@ -24,6 +29,7 @@ import com.jsp.ets.stack.Stack;
 import lombok.AllArgsConstructor;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Random;
 
 @Slf4j
@@ -48,6 +54,10 @@ public class UserService {
 	private Random random;
 
 	private CacheHelper cacheHelper;
+
+	private JwtService jwtService;
+
+	private AuthenticationManager authenticationManager;
 
 	public UserResponseDto registerUser(RegistrationRequestDTO registrationRequestDto, UserRole role) throws MessagingException {
 		User user = null;
@@ -146,4 +156,40 @@ public class UserService {
 			throw new  RegistrationSessionExpired("otp is incorrect or otp may expired, please try again");
 		}
 	}
+
+
+//	public  String login(LoginRequestDTO loginRequestDTO){
+//		UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken= new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(),loginRequestDTO.getPassword());
+//		 Authentication authentication= authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+//		if(authentication.isAuthenticated()){
+//		return  userRepository.findByEmail(loginRequestDTO.getEmail()).map(user ->
+//              jwtService.jwt(user.getUserId(), user.getEmail(), String.valueOf(user.getRole()))
+//			).orElseThrow(()  -> new UsernameNotFoundException("unauthenticated user login"));
+//		}
+//		System.out.println("login successfully");
+//		return null;
+//
+//    }
+
+	public String loginUser(LoginRequestDTO loginRequestDTO) {
+		System.out.println("hiii");
+		System.out.println(loginRequestDTO.getPassword());
+		System.out.println(loginRequestDTO.getEmail());
+		UsernamePasswordAuthenticationToken authenticationToken=new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(),loginRequestDTO.getPassword());
+		Authentication authentication = authenticationManager.authenticate(authenticationToken);
+
+		if(authentication.isAuthenticated()){
+
+			return userRepository.findByEmail(loginRequestDTO.getEmail()).map(user ->
+							jwtService.jwt(user.getUserId(), user.getEmail(),user.getRole().name()))
+					.orElseThrow(()->new UsernameNotFoundException("Invalid credentials"));
+
+
+
+		}
+
+		return null;
+
+}
+
 }
