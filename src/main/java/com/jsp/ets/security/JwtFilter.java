@@ -37,8 +37,8 @@ public class JwtFilter extends OncePerRequestFilter {
            }
        }
 
-        if (token != null) {
-            if(token.isEmpty()) {
+
+            if(token!=null && token.isEmpty()) {
                 Claims claims = jwtService.parseJwt(token);
                 String email = claims.get("email", String.class);
                 String role = claims.get("role", String.class);
@@ -55,7 +55,6 @@ public class JwtFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
                 }
             }
-        }
         filterChain.doFilter(request, response);
 
     }
