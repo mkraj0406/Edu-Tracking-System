@@ -25,7 +25,6 @@ public class SecurityConfig {
     @Bean
     @Order(2)
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-
         return  httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .securityMatchers(matcher-> matcher.requestMatchers("/"))
                 .authorizeHttpRequests(authorize ->

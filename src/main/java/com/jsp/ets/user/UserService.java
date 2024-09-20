@@ -59,10 +59,10 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
 
     @Value("${myapp.jwt.access_expiry}")
-    private long access_expiry;
+    private long accessExpiry;
 
-    @Value("${myapp.jwt.refresh_expiry}")
-    private long refresh_expiry;
+    @Value("${myapp.jwt.refreshExpiry}")
+    private long refreshExpiry;
 
     public UserService(UserRepository userRepository,
                        RatingRepository ratingRepository,
@@ -180,8 +180,6 @@ public class UserService {
 
 
     public ResponseEntity<ResponseStructure<UserResponseDto>> loginUser(LoginRequestDTO loginRequestDTO) {
-        System.out.println(loginRequestDTO.getPassword());
-        System.out.println(loginRequestDTO.getEmail());
         UsernamePasswordAuthenticationToken authenticationToken
                 = new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
@@ -203,12 +201,12 @@ public class UserService {
 
     private HttpHeaders grantAccessAccessToken(User user,HttpHeaders httpHeaders) {
         String access_token = jwtService.createAccessToken(user.getUserId(), user.getEmail(), user.getRole().name());
-        httpHeaders.add(HttpHeaders.SET_COOKIE, createCookie("at", access_token, access_expiry*60));
+        httpHeaders.add(HttpHeaders.SET_COOKIE, createCookie("at", access_token, accessExpiry*60));
         return httpHeaders;
     }
     private  HttpHeaders grantAccessResfreshToken(User user,HttpHeaders httpHeaders){
         String refresh_token = jwtService.createRefreshToken(user.getUserId(), user.getEmail(), user.getRole().name());
-        httpHeaders.add(HttpHeaders.SET_COOKIE, createCookie("rt", refresh_token, refresh_expiry*60));
+        httpHeaders.add(HttpHeaders.SET_COOKIE, createCookie("rt", refresh_token, refreshExpiry*60));
         return httpHeaders;
     }
 
@@ -223,10 +221,8 @@ public class UserService {
     }
 
     public  ResponseEntity<ResponseStructure<UserResponseDto>> refreshLogin(){
-
         Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        System.out.println(email);
          return userRepository.findByEmail(email).map(user -> {
               HttpHeaders httpHeaders = new HttpHeaders();
               httpHeaders = grantAccessAccessToken(user,httpHeaders);
