@@ -64,21 +64,15 @@ public class UserService {
     @Value("${myapp.jwt.refreshExpiry}")
     private long refreshExpiry;
 
-    public UserService(UserRepository userRepository,
-                       RatingRepository ratingRepository,
-                       BatchRepository batchRepository,
-                       UserMapper userMapper, RatingMapper ratingMapper,
-                       BatchMapper batchMapper, MailSenderService mailSenderService,
-                       Random random, CacheHelper cacheHelper, AuthenticationManager authenticationManager,
-                       JwtService jwtService) {
+    public UserService(UserRepository userRepository, RatingRepository ratingRepository, UserMapper userMapper, MailSenderService mailSenderService, Random random, CacheHelper cacheHelper, JwtService jwtService, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.ratingRepository = ratingRepository;
         this.userMapper = userMapper;
         this.mailSenderService = mailSenderService;
         this.random = random;
         this.cacheHelper = cacheHelper;
-        this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
     }
 
     public UserResponseDto registerUser(RegistrationRequestDTO registrationRequestDto, UserRole role) throws MessagingException {
