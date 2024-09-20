@@ -1,15 +1,21 @@
 package com.jsp.ets.user;
 
+import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.jsp.ets.security.RegistrationRequestDTO;
 
 @Component
+@AllArgsConstructor
 public class UserMapper {
+
+	private final PasswordEncoder passwordEncoder;
 
 	public User mapUserToEntity(RegistrationRequestDTO registrationRequestDTO, User user) {
 		user.setUsername(registrationRequestDTO.getUsername());
 		user.setEmail(registrationRequestDTO.getEmail());
+		user.setPassword(passwordEncoder.encode(registrationRequestDTO.getPassword()));
 		return user;
 	}
 
