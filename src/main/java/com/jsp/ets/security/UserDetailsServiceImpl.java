@@ -1,7 +1,5 @@
 package com.jsp.ets.security;
 
-
-import com.jsp.ets.user.User;
 import com.jsp.ets.user.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,4 +28,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         System.out.println(userDetails);
         return userDetails;
     }
+
+
 }

@@ -7,7 +7,7 @@ import com.jsp.ets.btach.Batch;
 import com.jsp.ets.rating.Rating;
 import com.jsp.ets.stack.Stack;
 
-import jakarta.persistence.CascadeType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

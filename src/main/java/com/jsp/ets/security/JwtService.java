@@ -22,11 +22,24 @@ public class JwtService {
     @Value("${myapp.jwt.access_expiry}")
     private  long access_expiry;
 
-    public  String jwt(String userId,String email,String role){
+    @Value("${myapp.jwt.refresh_expiry}")
+    private long refresh_expiry;
+
+
+
+    public  String createAccessToken(String userId,String email,String role){
+       return createJwtToken(userId,email,role,access_expiry);
+    }
+
+    public String createRefreshToken(String userId,String email,String role){
+        return createJwtToken(userId,email,role,refresh_expiry);
+    }
+
+    private  String createJwtToken(String userId,String email,String role,long expiry){
        return Jwts.builder()
                 .setClaims(Map.of("userId",userId,"email",email,"role",role))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+access_expiry*60*1000))
+                .setExpiration(new Date(System.currentTimeMillis()+expiry*60*1000))
                 .signWith(getSignupKey(), SignatureAlgorithm.HS256).compact();
     }
 
