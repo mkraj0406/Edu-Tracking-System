@@ -121,7 +121,7 @@ public class UserController {
 		return responseBuilder.success(HttpStatus.OK, "stack successfully updated", studentResponseDTO);
 	}
 
-	@PostMapping("/verify/users/register")
+	@PostMapping("/users/verify")
 	public ResponseEntity<ResponseStructure<UserResponseDto>> userOtpVerfication(@RequestBody OtpRequestDTO otpRequestDTO){
 		 UserResponseDto userResponseDto= userService.userOtpVerification(otpRequestDTO);
 		 return responseBuilder.success(HttpStatus.CREATED,"Otp verified successfully",userResponseDto);
@@ -130,12 +130,12 @@ public class UserController {
 
 
 	@PostMapping("/login")
-	public String login(@RequestBody LoginRequestDTO loginRequestDTO){
-		 String token =  userService.loginUser(loginRequestDTO);
-		System.out.println(token);
-		return token;
+	public ResponseEntity<ResponseStructure<UserResponseDto>> login(@RequestBody LoginRequestDTO loginRequestDTO){
+		   return   userService.loginUser(loginRequestDTO);
 	}
 
-
-
+	@PostMapping("/refresh-login")
+	public ResponseEntity<ResponseStructure<UserResponseDto>> refreshLogin(){
+		return userService.refreshLogin();
+	}
 }

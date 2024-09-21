@@ -39,6 +39,7 @@ myapp:
   jwt:
     secret: ${JWT_SECRET}
     access_expiry: 5
+    refresh_expiry: 1440
 
 # Application Configuration
 super_admin:

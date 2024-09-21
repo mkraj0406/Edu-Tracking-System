@@ -8,12 +8,19 @@ import com.jsp.ets.security.JwtService;
 import com.jsp.ets.utility.CacheHelper;
 import com.jsp.ets.utility.MailSenderService;
 import com.jsp.ets.utility.MessageModel;
+import com.jsp.ets.utility.ResponseStructure;
 import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -26,38 +33,47 @@ import com.jsp.ets.rating.RatingRepository;
 import com.jsp.ets.security.RegistrationRequestDTO;
 import com.jsp.ets.stack.Stack;
 
-import lombok.AllArgsConstructor;
+
 
 import java.util.Date;
-import java.util.Objects;
 import java.util.Random;
 
 @Slf4j
 @Service
-@AllArgsConstructor
 public class UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    private RatingRepository ratingRepository;
+    private final RatingRepository ratingRepository;
 
-    private BatchRepository batchRepository;
+    private final UserMapper userMapper;
 
-    private UserMapper userMapper;
+    private final MailSenderService mailSenderService;
 
-    private RatingMapper ratingMapper;
+    private final Random random;
 
-    private BatchMapper batchMapper;
+    private final CacheHelper cacheHelper;
 
-    private MailSenderService mailSenderService;
+    private final JwtService jwtService;
 
-    private Random random;
+    private final AuthenticationManager authenticationManager;
 
-    private CacheHelper cacheHelper;
+    @Value("${myapp.jwt.access_expiry}")
+    private long accessExpiry;
 
-    private JwtService jwtService;
+    @Value("${myapp.jwt.refresh_expiry}")
+    private long refreshExpiry;
 
-    private AuthenticationManager authenticationManager;
+    public UserService(UserRepository userRepository, RatingRepository ratingRepository, UserMapper userMapper, MailSenderService mailSenderService, Random random, CacheHelper cacheHelper, JwtService jwtService, AuthenticationManager authenticationManager) {
+        this.userRepository = userRepository;
+        this.ratingRepository = ratingRepository;
+        this.userMapper = userMapper;
+        this.mailSenderService = mailSenderService;
+        this.random = random;
+        this.cacheHelper = cacheHelper;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
+    }
 
     public UserResponseDto registerUser(RegistrationRequestDTO registrationRequestDto, UserRole role) throws MessagingException {
         User user = null;
@@ -81,7 +97,6 @@ public class UserService {
                 log.info("Messaging exception occurred");
             }
         }
-
         return userMapper.mapUserToResponce(user);
     }
 
@@ -93,7 +108,6 @@ public class UserService {
             return userMapper.mapTainerToResponce(trainer);
 
         }).orElseThrow(() -> new TrainerNotFoundByIdException("Trainer not found by id!!"));
-
     }
 
     public StudentResponseDTO updateStudent(StudentRequestDTO studentRequestDTO, String userId) {
@@ -157,22 +171,56 @@ public class UserService {
     }
 
 
-    public String loginUser(LoginRequestDTO loginRequestDTO) {
-        System.out.println(loginRequestDTO.getPassword());
-        System.out.println(loginRequestDTO.getEmail());
+    public ResponseEntity<ResponseStructure<UserResponseDto>> loginUser(LoginRequestDTO loginRequestDTO) {
         UsernamePasswordAuthenticationToken authenticationToken
                 = new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
-
         if (authentication.isAuthenticated()) {
-            return userRepository.findByEmail(loginRequestDTO.getEmail()).map(user ->
-                            jwtService.jwt(user.getUserId(), user.getEmail(), user.getRole().name()))
+            return userRepository.findByEmail(loginRequestDTO.getEmail()).map(user -> {
+                HttpHeaders httpHeaders = new HttpHeaders();
+                httpHeaders = grantAccessAccessToken(user,httpHeaders);
+                httpHeaders = grantAccessResfreshToken(user,httpHeaders);
+                return ResponseEntity.ok().headers(httpHeaders)
+                        .body(ResponseStructure.create(HttpStatus.OK,"cookies is created", userMapper.mapUserToResponce(user)));
+                            }
+                    )
                     .orElseThrow(() -> new UsernameNotFoundException("Invalid credentials"));
 
+        }else {
+            throw new UsernameNotFoundException("user not found!!");
         }
-
-        return null;
-
     }
 
+    private HttpHeaders grantAccessAccessToken(User user,HttpHeaders httpHeaders) {
+        String accessToken = jwtService.createAccessToken(user.getUserId(), user.getEmail(), user.getRole().name());
+        httpHeaders.add(HttpHeaders.SET_COOKIE, createCookie("at", accessToken, accessExpiry*60));
+        return httpHeaders;
+    }
+    private  HttpHeaders grantAccessResfreshToken(User user,HttpHeaders httpHeaders){
+        String refreshToken = jwtService.createRefreshToken(user.getUserId(), user.getEmail(), user.getRole().name());
+        httpHeaders.add(HttpHeaders.SET_COOKIE, createCookie("rt", refreshToken, refreshExpiry*60));
+        return httpHeaders;
+    }
+
+    private String createCookie(String name, String value, long maxAge) {
+        return ResponseCookie.from(name, value)
+                .domain("localhost")
+                .path("/")
+                .secure(false)
+                .httpOnly(true)
+                .sameSite("Lax")
+                .maxAge(maxAge).build().toString();
+    }
+
+    public  ResponseEntity<ResponseStructure<UserResponseDto>> refreshLogin(){
+        Authentication authentication= SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+         return userRepository.findByEmail(email).map(user -> {
+              HttpHeaders httpHeaders = new HttpHeaders();
+              httpHeaders = grantAccessAccessToken(user,httpHeaders);
+              return ResponseEntity.ok().headers(httpHeaders)
+                      .body(ResponseStructure
+                              .create(HttpStatus.OK,"cookies is created", userMapper.mapUserToResponce(user)));
+          }).orElseThrow(() -> new UsernameNotFoundException("failed to find  email"));
+    }
 }
