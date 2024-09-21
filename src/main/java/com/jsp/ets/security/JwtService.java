@@ -1,12 +1,18 @@
 package com.jsp.ets.security;
 
+import com.jsp.ets.user.UserRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -51,5 +57,25 @@ public class JwtService {
      JwtParser jwtParser =  Jwts.parserBuilder()
                 .setSigningKey(getSignupKey()).build();
      return jwtParser.parseClaimsJws(token).getBody();
+    }
+
+    public void authenticationToken(String token, HttpServletRequest request){
+        if (token != null && token.isEmpty()) {
+            Claims claims = parseJwt(token);
+            String email = claims.get("email", String.class);
+            String role = claims.get("role", String.class);
+            if (email != null && role != null) {
+                UserRole userRole = UserRole.valueOf(role);
+
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(email, null, userRole
+                        .getUserRole()
+                        .stream()
+                        .map(privilege -> new SimpleGrantedAuthority(privilege.name()))
+                        .toList()
+                );
+                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+            }
+        }
     }
 }

@@ -61,7 +61,7 @@ public class UserService {
     @Value("${myapp.jwt.access_expiry}")
     private long accessExpiry;
 
-    @Value("${myapp.jwt.refreshExpiry}")
+    @Value("${myapp.jwt.refresh_expiry}")
     private long refreshExpiry;
 
     public UserService(UserRepository userRepository, RatingRepository ratingRepository, UserMapper userMapper, MailSenderService mailSenderService, Random random, CacheHelper cacheHelper, JwtService jwtService, AuthenticationManager authenticationManager) {
@@ -97,7 +97,6 @@ public class UserService {
                 log.info("Messaging exception occurred");
             }
         }
-
         return userMapper.mapUserToResponce(user);
     }
 
@@ -109,7 +108,6 @@ public class UserService {
             return userMapper.mapTainerToResponce(trainer);
 
         }).orElseThrow(() -> new TrainerNotFoundByIdException("Trainer not found by id!!"));
-
     }
 
     public StudentResponseDTO updateStudent(StudentRequestDTO studentRequestDTO, String userId) {
@@ -224,6 +222,5 @@ public class UserService {
                       .body(ResponseStructure
                               .create(HttpStatus.OK,"cookies is created", userMapper.mapUserToResponce(user)));
           }).orElseThrow(() -> new UsernameNotFoundException("failed to find  email"));
-
     }
 }

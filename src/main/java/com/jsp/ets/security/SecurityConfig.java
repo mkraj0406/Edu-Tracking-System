@@ -28,7 +28,7 @@ public class SecurityConfig {
         return  httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 .securityMatchers(matcher-> matcher.requestMatchers("/"))
                 .authorizeHttpRequests(authorize ->
-                authorize.requestMatchers("/register/**","/login","/verify/users").
+                authorize.requestMatchers("/register/**","/login","/users/verify").
                         permitAll()
                         .anyRequest()
                         .authenticated())
@@ -59,8 +59,6 @@ public class SecurityConfig {
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-
-
 
 
 }

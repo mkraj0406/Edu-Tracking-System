@@ -37,24 +37,24 @@ public class JwtFilter extends OncePerRequestFilter {
            }
        }
 
-
-            if(token!=null && token.isEmpty()) {
-                Claims claims = jwtService.parseJwt(token);
-                String email = claims.get("email", String.class);
-                String role = claims.get("role", String.class);
-                if (email != null && role != null) {
-                    UserRole userRole = UserRole.valueOf(role);
-
-                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(email, null, userRole
-                            .getUserRole()
-                            .stream()
-                            .map(privilege -> new SimpleGrantedAuthority(privilege.name()))
-                            .toList()
-                    );
-                    usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-                }
-            }
+       jwtService.authenticationToken(token,request);
+//            if(token!=null && token.isEmpty()) {
+//                Claims claims = jwtService.parseJwt(token);
+//                String email = claims.get("email", String.class);
+//                String role = claims.get("role", String.class);
+//                if (email != null && role != null) {
+//                    UserRole userRole = UserRole.valueOf(role);
+//
+//                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(email, null, userRole
+//                            .getUserRole()
+//                            .stream()
+//                            .map(privilege -> new SimpleGrantedAuthority(privilege.name()))
+//                            .toList()
+//                    );
+//                    usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetails(request));
+//                    SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+//                }
+//            }
         filterChain.doFilter(request, response);
 
     }
