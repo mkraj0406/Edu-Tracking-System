@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 
 @AllArgsConstructor
@@ -21,17 +22,16 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
        Cookie[] cookies= request.getCookies();
-       String token=null;
-       if(cookies != null){
-           for(Cookie cookie:cookies){
-               if("at".equals(cookie.getName())){
-                   token = cookie.getValue();
-                   break;
-               }
-           }
-       }
+        String token = cookies != null ?
+                Arrays.stream(cookies)
+                        .filter(cookie -> "at".equals(cookie.getName()))
+                        .map(Cookie::getValue)
+                        .findFirst()
+                        .orElse(null)
+                : null;
 
-       jwtService.authenticationToken(token,request);
+
+        jwtService.authenticationToken(token,request);
        filterChain.doFilter(request, response);
 
     }
